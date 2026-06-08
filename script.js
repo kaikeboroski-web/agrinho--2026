@@ -1,39 +1,64 @@
-// Elementos do DOM
-const quantidadeInput = document.getElementById('quantidade');
-const calcularBtn = document.getElementById('calcularBtn');
-const resultadoDiv = document.getElementById('resultado');
-const mensagemDia = document.getElementById('mensagemDia');
+// Seleção de elementos
+const form = document.getElementById('propertyForm');
+const areaInput = document.getElementById('area');
+const currentPreservedInput = document.getElementById('currentPreserved');
 
-// Função para calcular impacto
-function calcularImpacto() {
-    const quantidade = parseInt(quantidadeInput.value);
+const resultDiv = document.getElementById('result');
+const reserveResult = document.getElementById('reserveResult');
+const appResult = document.getElementById('appResult');
+const advice = document.getElementById('advice');
 
-    if (isNaN(quantidade) || quantidade <= 0) {
-        resultadoDiv.textContent = "Insira um número válido de árvores!";
+const visualizationDiv = document.getElementById('visualization');
+const visualReserve = document.getElementById('visualReserve');
+const visualApp = document.getElementById('visualApp');
+
+// Função para calcular áreas
+function calculateAreas(area, currentPreserved) {
+    const reserveLegal = area * 0.2; // 20% da propriedade
+    const app = area * 0.1; // 10% da propriedade
+
+    const reserveToMaintain = Math.max(0, reserveLegal - currentPreserved);
+    return { reserveLegal, app, reserveToMaintain };
+}
+
+// Função para exibir resultados
+function displayResults(areas) {
+    reserveResult.textContent = `Reserva Legal necessária: ${areas.reserveLegal.toFixed(2)} hectares`;
+    appResult.textContent = `Área de Preservação Permanente (APP): ${areas.app.toFixed(2)} hectares`;
+
+    if (areas.reserveToMaintain > 0) {
+        advice.textContent = `Você precisa preservar mais ${areas.reserveToMaintain.toFixed(2)} hectares para cumprir a lei.`;
+    } else {
+        advice.textContent = `Parabéns! Sua propriedade já atende à Reserva Legal.`;
+    }
+
+    resultDiv.classList.remove('hidden');
+}
+
+// Função para atualizar visualização gráfica
+function updateVisualization(areas, totalArea) {
+    const reservePercent = (areas.reserveLegal / totalArea) * 100;
+    const appPercent = (areas.app / totalArea) * 100;
+
+    visualReserve.style.width = reservePercent + '%';
+    visualApp.style.width = appPercent + '%';
+
+    visualizationDiv.classList.remove('hidden');
+}
+
+// Evento do formulário
+form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const area = parseFloat(areaInput.value);
+    const currentPreserved = parseFloat(currentPreservedInput.value);
+
+    if(area < 0 || currentPreserved < 0){
+        alert('Por favor, insira valores válidos.');
         return;
     }
 
-    const impactoCO2 = quantidade * 21; // kg de CO2/ano
-    resultadoDiv.textContent = `Essas árvores podem capturar aproximadamente ${impactoCO2} kg de CO2 por ano. 🌱`;
-}
-
-// Mensagem dinâmica de acordo com o horário
-function mensagemPorHorario() {
-    const hora = new Date().getHours();
-    if (hora < 12) {
-        mensagemDia.textContent = "Bom dia! Que tal plantar esperança hoje?";
-    } else if (hora < 18) {
-        mensagemDia.textContent = "Boa tarde! Lembre-se de cuidar do nosso planeta.";
-    } else {
-        mensagemDia.textContent = "Boa noite! O futuro sustentável começa com suas ações hoje.";
-    }
-}
-
-// Eventos
-calcularBtn.addEventListener('click', calcularImpacto);
-window.addEventListener('load', mensagemPorHorario);
-
-// Animação de cores do fundo a cada 5 segundos
-setInterval(() => {
-    document.body.style.background = `linear-gradient(to bottom, #f0f9f0, #${Math.floor(Math.random()*16777215).toString(16)})`;
-}, 5000);
+    const areas = calculateAreas(area, currentPreserved);
+    displayResults(areas);
+    updateVisualization(areas, area);
+});

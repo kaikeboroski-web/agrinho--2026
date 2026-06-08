@@ -3,37 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agro Forte - Futuro Sustentável</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Calculadora Código Florestal</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <img src="assets/logo.png" alt="Logotipo do Projeto" class="logo">
-        <h1>Agro Forte, Futuro Sustentável</h1>
+        <h1>Calculadora do Código Florestal</h1>
+        <p>Descubra quantos hectares da sua propriedade devem ser preservados como Reserva Legal e APP.</p>
     </header>
 
     <main>
-        <section class="intro">
-            <p>Descubra como plantar árvores e equilibrar produção agrícola com meio ambiente!</p>
-        </section>
+        <section class="calculator">
+            <form id="propertyForm">
+                <label for="area">Tamanho da propriedade (hectares):</label>
+                <input type="number" id="area" min="0" required>
 
-        <section class="atividade">
-            <h2>Simulação de Plantio Sustentável</h2>
-            <label for="quantidade">Quantidade de árvores plantadas:</label>
-            <input type="number" id="quantidade" placeholder="Ex: 5">
-            <button id="calcularBtn">Calcular Impacto</button>
-            <div id="resultado"></div>
-        </section>
+                <label for="currentPreserved">Área já preservada (hectares):</label>
+                <input type="number" id="currentPreserved" min="0" value="0" required>
 
-        <section class="mensagem-dia">
-            <h2 id="mensagemDia"></h2>
+                <button type="submit">Calcular</button>
+            </form>
+
+            <div id="result" class="hidden">
+                <h2>Resultado</h2>
+                <p id="reserveResult"></p>
+                <p id="appResult"></p>
+                <p id="advice"></p>
+            </div>
+
+            <div class="visualization hidden" id="visualization">
+                <div class="total-area">
+                    <div class="reserve-legal" id="visualReserve"></div>
+                    <div class="app-area" id="visualApp"></div>
+                </div>
+            </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 Concurso Agrinho - Projeto de autoria própria</p>
+        <p>Agro forte, futuro sustentável: equilíbrio entre produção e meio ambiente</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
